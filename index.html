@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM Wiki — Cohort Vault</title>
+<meta name="description" content="A starter kit for an LLM-maintained knowledge base. Sources in, cited knowledge out.">
+<style>
+  :root{
+    --bg:#fbfaf7; --panel:#ffffff; --ink:#1a1a1a; --muted:#5f5f5a;
+    --line:#e7e4dc; --accent:#b4531f; --accent-soft:#f4e7dd; --code:#f3f1ea;
+    --shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14140f; --panel:#1c1c17; --ink:#ece9e2; --muted:#a09a8e;
+      --line:#2c2c24; --accent:#e08a4f; --accent-soft:#2a2016; --code:#232019;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:920px; margin:0 auto; padding:0 22px}
+  code,.mono{font-family:"SF Mono",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace}
+  a{color:var(--accent); text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  /* hero */
+  header.hero{padding:74px 0 46px; border-bottom:1px solid var(--line)}
+  .eyebrow{font-size:12.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); font-weight:700; margin-bottom:16px}
+  h1{font-size:clamp(2.1rem,5vw,3.1rem); line-height:1.08; margin:0 0 18px; letter-spacing:-.02em}
+  .lede{font-size:1.18rem; color:var(--muted); max-width:640px; margin:0}
+  .cta{margin-top:30px; display:flex; gap:12px; flex-wrap:wrap}
+  .btn{display:inline-block; padding:11px 20px; border-radius:9px; font-weight:600; font-size:.95rem; border:1px solid var(--line)}
+  .btn.primary{background:var(--accent); color:#fff; border-color:var(--accent)}
+  .btn.primary:hover{text-decoration:none; filter:brightness(1.05)}
+  .btn.ghost{background:var(--panel); color:var(--ink)}
+  .btn.ghost:hover{text-decoration:none; border-color:var(--accent)}
+
+  /* flow strip */
+  .flow{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:34px; font-size:.92rem}
+  .flow .pill{background:var(--accent-soft); color:var(--accent); padding:5px 13px; border-radius:999px; font-weight:600; white-space:nowrap}
+  .flow .arw{color:var(--muted); font-weight:700}
+
+  section{padding:52px 0; border-bottom:1px solid var(--line)}
+  h2{font-size:1.55rem; letter-spacing:-.01em; margin:0 0 8px}
+  .sub{color:var(--muted); margin:0 0 30px; max-width:640px}
+
+  .layers{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:22px; box-shadow:var(--shadow)}
+  .card .tag{font-family:inherit; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); font-weight:700}
+  .card h3{margin:8px 0 6px; font-size:1.12rem}
+  .card p{margin:0; color:var(--muted); font-size:.94rem}
+
+  ol.steps{counter-reset:s; list-style:none; padding:0; margin:0; display:grid; gap:14px}
+  ol.steps li{position:relative; padding:16px 18px 16px 58px; background:var(--panel); border:1px solid var(--line); border-radius:12px}
+  ol.steps li::before{counter-increment:s; content:counter(s); position:absolute; left:16px; top:15px;
+    width:28px; height:28px; border-radius:50%; background:var(--accent); color:#fff; font-weight:700; font-size:.9rem;
+    display:grid; place-items:center}
+  ol.steps li b{display:block; margin-bottom:2px}
+  ol.steps li span{color:var(--muted); font-size:.94rem}
+  kbd{background:var(--code); border:1px solid var(--line); border-radius:6px; padding:1px 7px; font-family:"SF Mono",ui-monospace,monospace; font-size:.86em}
+
+  .feat{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  .feat .item{background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:10px; padding:16px 18px}
+  .feat .item h4{margin:0 0 4px; font-size:1rem}
+  .feat .item p{margin:0; color:var(--muted); font-size:.92rem}
+
+  .tree{background:var(--code); border:1px solid var(--line); border-radius:12px; padding:20px 22px; overflow-x:auto}
+  .tree pre{margin:0; font-family:"SF Mono",ui-monospace,monospace; font-size:.86rem; line-height:1.7; color:var(--ink)}
+  .tree .c{color:var(--muted)}
+
+  .ops{display:grid; grid-template-columns:repeat(2,1fr); gap:14px}
+  .op{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px 20px}
+  .op h4{margin:0 0 4px; font-size:1rem}
+  .op code{background:var(--code); border:1px solid var(--line); border-radius:6px; padding:2px 7px; font-size:.84rem; display:inline-block; margin-top:6px; color:var(--ink)}
+  .op p{margin:0; color:var(--muted); font-size:.92rem}
+
+  footer{padding:44px 0 70px; color:var(--muted); font-size:.9rem}
+  footer .wrap{display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; align-items:center}
+
+  @media (max-width:720px){
+    .layers,.feat,.ops{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">LLM-Maintained Knowledge Base</div>
+    <h1>Sources in. Cited knowledge out.</h1>
+    <p class="lede">A starter kit for a wiki your AI agent maintains for you — reading sources,
+    extracting knowledge, and keeping an interlinked, trustworthy set of notes that compounds
+    over time instead of being re-derived on every question.</p>
+    <div class="cta">
+      <a class="btn primary" href="README.md">Read the README</a>
+      <a class="btn ghost" href="METHODOLOGY.md">Research methodology</a>
+      <a class="btn ghost" href="CLAUDE.md">The operating manual</a>
+    </div>
+    <div class="flow">
+      <span class="pill">Frame</span><span class="arw">→</span>
+      <span class="pill">Discover</span><span class="arw">→</span>
+      <span class="pill">Triangulate</span><span class="arw">→</span>
+      <span class="pill">Synthesize</span><span class="arw">→</span>
+      <span class="pill">File back</span><span class="arw">→</span>
+      <span class="pill">Review</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>The three layers</h2>
+    <p class="sub">Sources go in, knowledge comes out, and a set of rules keeps it consistent.
+    That separation is what lets the wiki stay trustworthy as it grows.</p>
+    <div class="layers">
+      <div class="card">
+        <div class="tag">raw/</div>
+        <h3>Sources</h3>
+        <p>Immutable source of truth — articles, papers, transcripts, data. The agent reads
+        these and never edits them.</p>
+      </div>
+      <div class="card">
+        <div class="tag">wiki/</div>
+        <h3>Knowledge</h3>
+        <p>LLM-generated, interlinked markdown across four areas. The agent owns this layer
+        entirely: pages, cross-links, consistency.</p>
+      </div>
+      <div class="card">
+        <div class="tag">CLAUDE.md</div>
+        <h3>The rules</h3>
+        <p>How the wiki is structured and maintained. Read every session, co-evolved as your
+        conventions improve.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Quick start</h2>
+    <p class="sub">Copy the folder, point your agent at it, and start feeding it sources.</p>
+    <ol class="steps">
+      <li><b>Copy this vault</b><span>Grab the whole folder, rename it, and optionally <kbd>git init</kbd> so everyone forks their own.</span></li>
+      <li><b>Open it in Claude Code</b><span>The agent reads <code>CLAUDE.md</code> at the start of every session — that's the contract.</span></li>
+      <li><b>Drop a source into <code>raw/</code></b><span>An article, a paper, a transcript, notes, an image.</span></li>
+      <li><b>Ask it to ingest</b><span>It summarizes the source, rates its credibility, and files cited, confidence-tagged claims into <code>wiki/</code>.</span></li>
+      <li><b>Ask questions</b><span>Good answers get filed back as new pages — your explorations compound instead of evaporating.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>What's new in this refresh</h2>
+    <p class="sub">Sharper research methods so a whole cohort produces knowledge the same,
+    trustworthy way. Full detail in <a href="METHODOLOGY.md">METHODOLOGY.md</a>.</p>
+    <div class="feat">
+      <div class="item"><h4>A named research loop</h4><p>Frame → Discover → Triangulate → Synthesize → File back → Review. Everyone researches identically.</p></div>
+      <div class="item"><h4>Source credibility ratings</h4><p><code>high / medium / low</code> via a CRAAP checklist, with conflict-of-interest disclosed up front.</p></div>
+      <div class="item"><h4>Confidence tags on claims</h4><p><code>[C:high]</code> / <code>[C:med]</code> / <code>[C:low]</code> — solid facts and hypotheses stay visibly distinct.</p></div>
+      <div class="item"><h4>Triangulation rule</h4><p>Load-bearing claims need ≥2 <em>independent</em> sources before a synthesis leans on them.</p></div>
+      <div class="item"><h4>A live question backlog</h4><p><code>questions.md</code> keeps the vault driving forward between sessions instead of stalling.</p></div>
+      <div class="item"><h4>Freshness discipline</h4><p><code>review-by</code> dates plus a lint pass so time-sensitive claims don't quietly rot.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>What's in the box</h2>
+    <p class="sub">A clean, empty vault with the structure, the manuals, and one seed page per area.</p>
+    <div class="tree">
+<pre>vault/
+├─ <a href="CLAUDE.md">CLAUDE.md</a>          <span class="c"># operating manual — read every session</span>
+├─ <a href="METHODOLOGY.md">METHODOLOGY.md</a>     <span class="c"># the research method behind the conventions</span>
+├─ <a href="CONTRIBUTING.md">CONTRIBUTING.md</a>    <span class="c"># hard-won lessons + anti-patterns</span>
+├─ <a href="README.md">README.md</a>          <span class="c"># onboarding + quick start</span>
+├─ index.md           <span class="c"># catalog of every page</span>
+├─ log.md             <span class="c"># append-only timeline</span>
+├─ questions.md       <span class="c"># the live research backlog</span>
+├─ raw/               <span class="c"># your immutable sources</span>
+└─ wiki/
+   ├─ research/       <span class="c"># sources, concepts, entities, synthesis</span>
+   ├─ personal/       <span class="c"># goals, journals, self-overview</span>
+   ├─ book/           <span class="c"># chapters, characters, themes</span>
+   └─ general/        <span class="c"># flexible / mixed knowledge</span></pre>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Four operations</h2>
+    <p class="sub">Everything the agent does falls into one of these. Full definitions live in <a href="CLAUDE.md">CLAUDE.md</a>.</p>
+    <div class="ops">
+      <div class="op"><h4>Ingest</h4><p>Add a source.</p><code>"Ingest raw/&lt;file&gt;."</code></div>
+      <div class="op"><h4>Query</h4><p>Ask a question of your sources.</p><code>"What connects X and Y?"</code></div>
+      <div class="op"><h4>Research</h4><p>Go beyond raw/ with the web.</p><code>"Research &lt;topic&gt; and file it back."</code></div>
+      <div class="op"><h4>Lint</h4><p>Health-check the vault.</p><code>"Find stale claims and orphans."</code></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>LLM Wiki — Cohort Vault · a compounding knowledge base</span>
+    <span><a href="README.md">Get started →</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
