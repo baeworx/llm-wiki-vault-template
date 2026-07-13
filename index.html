@@ -3,119 +3,196 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LLM Wiki — Cohort Vault</title>
-<meta name="description" content="A starter kit for an LLM-maintained knowledge base. Sources in, cited knowledge out.">
+<title>BAEWORXS // LLM Wiki — Cohort Vault</title>
+<meta name="description" content="A cyberpunk starter kit for an LLM-maintained knowledge base. Sources in, cited knowledge out.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#fbfaf7; --panel:#ffffff; --ink:#1a1a1a; --muted:#5f5f5a;
-    --line:#e7e4dc; --accent:#b4531f; --accent-soft:#f4e7dd; --code:#f3f1ea;
-    --shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);
-  }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --bg:#14140f; --panel:#1c1c17; --ink:#ece9e2; --muted:#a09a8e;
-      --line:#2c2c24; --accent:#e08a4f; --accent-soft:#2a2016; --code:#232019;
-      --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);
-    }
+    --bg:#06070d; --bg2:#0a0c16; --panel:#0c0f1c; --panel2:#0e1120;
+    --ink:#d6e4f0; --muted:#7d8bb0;
+    --cyan:#00e5ff; --magenta:#ff2ecd; --violet:#a855f7; --amber:#ffd166; --lime:#8dff5a;
+    --line:#1b2440; --line2:#26315c;
+    --glow-cyan:0 0 6px rgba(0,229,255,.6),0 0 22px rgba(0,229,255,.28);
+    --glow-mag:0 0 6px rgba(255,46,205,.6),0 0 22px rgba(255,46,205,.3);
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{
     margin:0; background:var(--bg); color:var(--ink);
-    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    -webkit-font-smoothing:antialiased;
+    font:16px/1.65 "Rajdhani",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    -webkit-font-smoothing:antialiased; position:relative; overflow-x:hidden;
   }
-  .wrap{max-width:920px; margin:0 auto; padding:0 22px}
-  code,.mono{font-family:"SF Mono",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace}
-  a{color:var(--accent); text-decoration:none}
-  a:hover{text-decoration:underline}
+  /* animated neon grid */
+  body::before{
+    content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      linear-gradient(rgba(0,229,255,.05) 1px,transparent 1px) 0 0/44px 44px,
+      linear-gradient(90deg,rgba(255,46,205,.045) 1px,transparent 1px) 0 0/44px 44px,
+      radial-gradient(ellipse at 50% -10%,rgba(168,85,247,.18),transparent 60%);
+    animation:drift 18s linear infinite;
+  }
+  @keyframes drift{from{background-position:0 0,0 0,0 0}to{background-position:0 44px,44px 0,0 0}}
+  /* scanlines */
+  body::after{
+    content:""; position:fixed; inset:0; z-index:2; pointer-events:none; opacity:.5;
+    background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.22) 2px 4px);
+    mix-blend-mode:multiply;
+  }
+  .wrap{max-width:960px; margin:0 auto; padding:0 22px; position:relative; z-index:3}
+  code,.mono{font-family:"Share Tech Mono",ui-monospace,Menlo,Consolas,monospace}
+  a{color:var(--cyan); text-decoration:none}
+  a:hover{text-decoration:none; color:#fff; text-shadow:var(--glow-cyan)}
+
+  /* top brand bar */
+  .topbar{border-bottom:1px solid var(--line); background:linear-gradient(180deg,rgba(255,46,205,.06),transparent); position:relative; z-index:3}
+  .topbar .wrap{display:flex; align-items:center; justify-content:space-between; height:56px}
+  .brand{font-family:"Orbitron",sans-serif; font-weight:900; letter-spacing:.28em; font-size:1.02rem;
+    color:#fff; text-shadow:var(--glow-cyan)}
+  .brand .x{color:var(--magenta); text-shadow:var(--glow-mag)}
+  .brand::before{content:"▍"; color:var(--cyan); margin-right:8px; animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .topbar .status{font-family:"Share Tech Mono",monospace; font-size:.72rem; letter-spacing:.14em; color:var(--muted); text-transform:uppercase}
+  .topbar .status .dot{display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--lime);
+    box-shadow:0 0 8px var(--lime); margin-right:7px; vertical-align:middle}
 
   /* hero */
-  header.hero{padding:74px 0 46px; border-bottom:1px solid var(--line)}
-  .eyebrow{font-size:12.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); font-weight:700; margin-bottom:16px}
-  h1{font-size:clamp(2.1rem,5vw,3.1rem); line-height:1.08; margin:0 0 18px; letter-spacing:-.02em}
-  .lede{font-size:1.18rem; color:var(--muted); max-width:640px; margin:0}
-  .cta{margin-top:30px; display:flex; gap:12px; flex-wrap:wrap}
-  .btn{display:inline-block; padding:11px 20px; border-radius:9px; font-weight:600; font-size:.95rem; border:1px solid var(--line)}
-  .btn.primary{background:var(--accent); color:#fff; border-color:var(--accent)}
-  .btn.primary:hover{text-decoration:none; filter:brightness(1.05)}
-  .btn.ghost{background:var(--panel); color:var(--ink)}
-  .btn.ghost:hover{text-decoration:none; border-color:var(--accent)}
+  header.hero{padding:70px 0 52px; border-bottom:1px solid var(--line); position:relative; z-index:3}
+  .eyebrow{font-family:"Share Tech Mono",monospace; font-size:12.5px; letter-spacing:.28em; text-transform:uppercase;
+    color:var(--magenta); margin-bottom:20px; text-shadow:var(--glow-mag)}
+  h1{font-family:"Orbitron",sans-serif; font-weight:900; font-size:clamp(2rem,5.4vw,3.3rem); line-height:1.06;
+    margin:0 0 20px; letter-spacing:-.01em; color:#fff; position:relative;
+    text-shadow:0 0 10px rgba(0,229,255,.35);}
+  /* glitch */
+  .glitch{position:relative; display:inline-block}
+  .glitch::before,.glitch::after{content:attr(data-text); position:absolute; left:0; top:0; width:100%; overflow:hidden}
+  .glitch::before{color:var(--magenta); z-index:-1; animation:gl1 2.6s infinite linear alternate-reverse}
+  .glitch::after{color:var(--cyan); z-index:-2; animation:gl2 3.4s infinite linear alternate-reverse}
+  @keyframes gl1{0%{clip-path:inset(0 0 82% 0);transform:translate(-2px,-1px)}20%{clip-path:inset(40% 0 40% 0);transform:translate(2px,1px)}40%{clip-path:inset(78% 0 4% 0);transform:translate(-1px,0)}60%,100%{clip-path:inset(0 0 100% 0);transform:translate(0,0)}}
+  @keyframes gl2{0%{clip-path:inset(70% 0 12% 0);transform:translate(2px,1px)}25%{clip-path:inset(20% 0 62% 0);transform:translate(-2px,-1px)}50%{clip-path:inset(48% 0 30% 0);transform:translate(1px,0)}75%,100%{clip-path:inset(0 0 100% 0);transform:translate(0,0)}}
+  .lede{font-size:1.16rem; color:var(--muted); max-width:660px; margin:0}
+  .lede b{color:var(--ink); font-weight:600}
 
-  /* flow strip */
-  .flow{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:34px; font-size:.92rem}
-  .flow .pill{background:var(--accent-soft); color:var(--accent); padding:5px 13px; border-radius:999px; font-weight:600; white-space:nowrap}
-  .flow .arw{color:var(--muted); font-weight:700}
+  .cta{margin-top:32px; display:flex; gap:14px; flex-wrap:wrap}
+  .btn{display:inline-block; padding:12px 22px; font-family:"Share Tech Mono",monospace; font-size:.86rem;
+    letter-spacing:.12em; text-transform:uppercase; border:1px solid var(--line2); color:var(--ink);
+    background:var(--panel); clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+    transition:.15s}
+  .btn:hover{text-decoration:none; color:#04121a}
+  .btn.primary{border-color:var(--cyan); color:#eafcff; box-shadow:var(--glow-cyan)}
+  .btn.primary:hover{background:var(--cyan); color:#04121a; text-shadow:none}
+  .btn.ghost:hover{border-color:var(--magenta); color:#fff; box-shadow:var(--glow-mag)}
 
-  section{padding:52px 0; border-bottom:1px solid var(--line)}
-  h2{font-size:1.55rem; letter-spacing:-.01em; margin:0 0 8px}
-  .sub{color:var(--muted); margin:0 0 30px; max-width:640px}
+  .flow{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:38px}
+  .flow .pill{font-family:"Share Tech Mono",monospace; font-size:.8rem; letter-spacing:.08em;
+    background:rgba(0,229,255,.07); color:var(--cyan); padding:6px 14px; border:1px solid rgba(0,229,255,.35);
+    box-shadow:inset 0 0 12px rgba(0,229,255,.12); white-space:nowrap}
+  .flow .arw{color:var(--magenta); font-family:monospace; font-weight:700}
+
+  section{padding:56px 0; border-bottom:1px solid var(--line); position:relative; z-index:3}
+  .kick{font-family:"Share Tech Mono",monospace; font-size:.74rem; letter-spacing:.24em; text-transform:uppercase;
+    color:var(--violet); margin:0 0 10px}
+  .kick .n{color:var(--cyan)}
+  h2{font-family:"Orbitron",sans-serif; font-weight:700; font-size:1.5rem; letter-spacing:.01em; margin:0 0 8px; color:#fff}
+  .sub{color:var(--muted); margin:0 0 32px; max-width:660px}
 
   .layers{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
-  .card{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:22px; box-shadow:var(--shadow)}
-  .card .tag{font-family:inherit; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); font-weight:700}
-  .card h3{margin:8px 0 6px; font-size:1.12rem}
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2)); border:1px solid var(--line2); padding:22px;
+    position:relative; clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
+    transition:.18s}
+  .card:hover{border-color:var(--cyan); box-shadow:var(--glow-cyan); transform:translateY(-3px)}
+  .card::before{content:""; position:absolute; top:10px; right:10px; width:8px; height:8px;
+    border-top:2px solid var(--magenta); border-right:2px solid var(--magenta)}
+  .card .tag{font-family:"Share Tech Mono",monospace; font-size:12px; letter-spacing:.06em; color:var(--cyan)}
+  .card h3{font-family:"Orbitron",sans-serif; font-weight:600; margin:8px 0 6px; font-size:1.06rem; color:#fff}
   .card p{margin:0; color:var(--muted); font-size:.94rem}
 
   ol.steps{counter-reset:s; list-style:none; padding:0; margin:0; display:grid; gap:14px}
-  ol.steps li{position:relative; padding:16px 18px 16px 58px; background:var(--panel); border:1px solid var(--line); border-radius:12px}
-  ol.steps li::before{counter-increment:s; content:counter(s); position:absolute; left:16px; top:15px;
-    width:28px; height:28px; border-radius:50%; background:var(--accent); color:#fff; font-weight:700; font-size:.9rem;
-    display:grid; place-items:center}
-  ol.steps li b{display:block; margin-bottom:2px}
+  ol.steps li{position:relative; padding:16px 18px 16px 62px;
+    background:linear-gradient(90deg,rgba(0,229,255,.05),transparent); border:1px solid var(--line2);
+    border-left:2px solid var(--cyan)}
+  ol.steps li::before{counter-increment:s; content:"0" counter(s); position:absolute; left:14px; top:14px;
+    font-family:"Share Tech Mono",monospace; color:var(--cyan); font-size:1.05rem; text-shadow:var(--glow-cyan)}
+  ol.steps li b{display:block; margin-bottom:2px; color:var(--ink); font-weight:700}
   ol.steps li span{color:var(--muted); font-size:.94rem}
-  kbd{background:var(--code); border:1px solid var(--line); border-radius:6px; padding:1px 7px; font-family:"SF Mono",ui-monospace,monospace; font-size:.86em}
+  kbd{background:#000; border:1px solid var(--line2); color:var(--lime); padding:1px 7px;
+    font-family:"Share Tech Mono",monospace; font-size:.85em}
 
   .feat{display:grid; grid-template-columns:1fr 1fr; gap:14px}
-  .feat .item{background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:10px; padding:16px 18px}
-  .feat .item h4{margin:0 0 4px; font-size:1rem}
+  .feat .item{background:var(--panel); border:1px solid var(--line2); border-left:3px solid var(--magenta); padding:16px 18px}
+  .feat .item:hover{box-shadow:var(--glow-mag)}
+  .feat .item h4{font-family:"Orbitron",sans-serif; font-weight:600; margin:0 0 5px; font-size:.98rem; color:#fff}
   .feat .item p{margin:0; color:var(--muted); font-size:.92rem}
 
-  .tree{background:var(--code); border:1px solid var(--line); border-radius:12px; padding:20px 22px; overflow-x:auto}
-  .tree pre{margin:0; font-family:"SF Mono",ui-monospace,monospace; font-size:.86rem; line-height:1.7; color:var(--ink)}
-  .tree .c{color:var(--muted)}
+  /* terminal window */
+  .term{background:#04050b; border:1px solid var(--line2); box-shadow:0 0 30px rgba(0,229,255,.08)}
+  .term .bar{display:flex; align-items:center; gap:8px; padding:10px 14px; border-bottom:1px solid var(--line);
+    background:linear-gradient(90deg,rgba(255,46,205,.08),rgba(0,229,255,.06))}
+  .term .bar i{width:11px; height:11px; border-radius:50%; display:inline-block}
+  .term .bar .r{background:#ff5f57}.term .bar .y{background:#febc2e}.term .bar .g{background:#28c840}
+  .term .bar span{margin-left:8px; font-family:"Share Tech Mono",monospace; font-size:.74rem; color:var(--muted); letter-spacing:.1em}
+  .term pre{margin:0; padding:20px 22px; overflow-x:auto; font-family:"Share Tech Mono",monospace;
+    font-size:.85rem; line-height:1.75; color:var(--ink)}
+  .term .c{color:var(--muted)}
+  .term a{color:var(--cyan)}
 
   .ops{display:grid; grid-template-columns:repeat(2,1fr); gap:14px}
-  .op{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px 20px}
-  .op h4{margin:0 0 4px; font-size:1rem}
-  .op code{background:var(--code); border:1px solid var(--line); border-radius:6px; padding:2px 7px; font-size:.84rem; display:inline-block; margin-top:6px; color:var(--ink)}
-  .op p{margin:0; color:var(--muted); font-size:.92rem}
+  .op{background:var(--panel); border:1px solid var(--line2); padding:18px 20px; position:relative}
+  .op:hover{border-color:var(--violet); box-shadow:0 0 18px rgba(168,85,247,.3)}
+  .op h4{font-family:"Orbitron",sans-serif; font-weight:600; margin:0 0 4px; font-size:1rem; color:#fff}
+  .op h4::before{content:"› "; color:var(--magenta)}
+  .op p{margin:0 0 8px; color:var(--muted); font-size:.92rem}
+  .op code{background:#000; border:1px solid var(--line2); color:var(--lime); padding:3px 8px;
+    font-size:.82rem; display:inline-block; font-family:"Share Tech Mono",monospace}
 
-  footer{padding:44px 0 70px; color:var(--muted); font-size:.9rem}
-  footer .wrap{display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; align-items:center}
+  footer{padding:40px 0 72px; color:var(--muted); font-size:.85rem; position:relative; z-index:3}
+  footer .wrap{display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; align-items:center;
+    font-family:"Share Tech Mono",monospace; letter-spacing:.08em}
+  footer .bx{color:var(--magenta); font-family:"Orbitron",sans-serif; font-weight:700; letter-spacing:.2em}
 
-  @media (max-width:720px){
-    .layers,.feat,.ops{grid-template-columns:1fr}
+  @media (max-width:720px){ .layers,.feat,.ops{grid-template-columns:1fr} }
+  @media (prefers-reduced-motion:reduce){
+    body::before{animation:none} .brand::before{animation:none}
+    .glitch::before,.glitch::after{display:none}
   }
 </style>
 </head>
 <body>
 
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand">BAEWOR<span class="x">X</span>S</div>
+    <div class="status"><span class="dot"></span>SYSTEM ONLINE // VAULT v2.0</div>
+  </div>
+</div>
+
 <header class="hero">
   <div class="wrap">
-    <div class="eyebrow">LLM-Maintained Knowledge Base</div>
-    <h1>Sources in. Cited knowledge out.</h1>
-    <p class="lede">A starter kit for a wiki your AI agent maintains for you — reading sources,
-    extracting knowledge, and keeping an interlinked, trustworthy set of notes that compounds
-    over time instead of being re-derived on every question.</p>
+    <div class="eyebrow">// LLM-MAINTAINED KNOWLEDGE BASE</div>
+    <h1><span class="glitch" data-text="Sources in.">Sources in.</span><br><span class="glitch" data-text="Cited knowledge out.">Cited knowledge out.</span></h1>
+    <p class="lede">A wiki your AI agent maintains for you — reading sources, extracting knowledge, and
+    keeping an interlinked, <b>trustworthy</b> set of notes that <b>compounds</b> over time instead of
+    being re-derived on every question.</p>
     <div class="cta">
-      <a class="btn primary" href="README.md">Read the README</a>
-      <a class="btn ghost" href="METHODOLOGY.md">Research methodology</a>
-      <a class="btn ghost" href="CLAUDE.md">The operating manual</a>
+      <a class="btn primary" href="README.md">// Read the README</a>
+      <a class="btn ghost" href="METHODOLOGY.md">// Methodology</a>
+      <a class="btn ghost" href="CLAUDE.md">// Operating manual</a>
     </div>
     <div class="flow">
-      <span class="pill">Frame</span><span class="arw">→</span>
-      <span class="pill">Discover</span><span class="arw">→</span>
-      <span class="pill">Triangulate</span><span class="arw">→</span>
-      <span class="pill">Synthesize</span><span class="arw">→</span>
-      <span class="pill">File back</span><span class="arw">→</span>
-      <span class="pill">Review</span>
+      <span class="pill">FRAME</span><span class="arw">»</span>
+      <span class="pill">DISCOVER</span><span class="arw">»</span>
+      <span class="pill">TRIANGULATE</span><span class="arw">»</span>
+      <span class="pill">SYNTHESIZE</span><span class="arw">»</span>
+      <span class="pill">FILE BACK</span><span class="arw">»</span>
+      <span class="pill">REVIEW</span>
     </div>
   </div>
 </header>
 
 <section>
   <div class="wrap">
+    <p class="kick"><span class="n">01</span> // ARCHITECTURE</p>
     <h2>The three layers</h2>
     <p class="sub">Sources go in, knowledge comes out, and a set of rules keeps it consistent.
     That separation is what lets the wiki stay trustworthy as it grows.</p>
@@ -144,6 +221,7 @@
 
 <section>
   <div class="wrap">
+    <p class="kick"><span class="n">02</span> // BOOT SEQUENCE</p>
     <h2>Quick start</h2>
     <p class="sub">Copy the folder, point your agent at it, and start feeding it sources.</p>
     <ol class="steps">
@@ -158,6 +236,7 @@
 
 <section>
   <div class="wrap">
+    <p class="kick"><span class="n">03</span> // PATCH NOTES</p>
     <h2>What's new in this refresh</h2>
     <p class="sub">Sharper research methods so a whole cohort produces knowledge the same,
     trustworthy way. Full detail in <a href="METHODOLOGY.md">METHODOLOGY.md</a>.</p>
@@ -174,9 +253,11 @@
 
 <section>
   <div class="wrap">
+    <p class="kick"><span class="n">04</span> // FILE TREE</p>
     <h2>What's in the box</h2>
     <p class="sub">A clean, empty vault with the structure, the manuals, and one seed page per area.</p>
-    <div class="tree">
+    <div class="term">
+      <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>baeworxs@vault: ~/llm-wiki $ tree</span></div>
 <pre>vault/
 ├─ <a href="CLAUDE.md">CLAUDE.md</a>          <span class="c"># operating manual — read every session</span>
 ├─ <a href="METHODOLOGY.md">METHODOLOGY.md</a>     <span class="c"># the research method behind the conventions</span>
@@ -197,6 +278,7 @@
 
 <section>
   <div class="wrap">
+    <p class="kick"><span class="n">05</span> // COMMAND SET</p>
     <h2>Four operations</h2>
     <p class="sub">Everything the agent does falls into one of these. Full definitions live in <a href="CLAUDE.md">CLAUDE.md</a>.</p>
     <div class="ops">
@@ -210,8 +292,8 @@
 
 <footer>
   <div class="wrap">
-    <span>LLM Wiki — Cohort Vault · a compounding knowledge base</span>
-    <span><a href="README.md">Get started →</a></span>
+    <span><span class="bx">BAEWORXS</span> // LLM WIKI — COHORT VAULT · A COMPOUNDING KNOWLEDGE BASE</span>
+    <span><a href="README.md">GET STARTED »</a></span>
   </div>
 </footer>
 
