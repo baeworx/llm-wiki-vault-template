@@ -2,6 +2,8 @@
 
 > *A BAEWORXS build by **Bae** — forked for the crew. Feed it › Cite it › Compound it.*
 
+**💬 Join the crew:** [discord.gg/4dWXPudfjm](https://discord.gg/4dWXPudfjm)
+
 A starter kit for an **LLM-maintained knowledge base**. You curate sources and ask
 questions; your LLM (Claude Code, or any agent that reads this repo) reads the sources,
 extracts knowledge, and maintains an interlinked wiki of markdown files. The wiki is a

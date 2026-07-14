@@ -42,6 +42,7 @@
   @keyframes blink{50%{opacity:0}}
   .nav nav{display:flex; gap:16px; margin-left:auto; font-family:"Share Tech Mono",monospace; font-size:.8rem; letter-spacing:.06em; text-transform:uppercase}
   .nav nav a{color:var(--muted)} .nav nav a:hover{color:var(--cyan); text-decoration:none}
+  .nav nav a.join{color:var(--magenta)} .nav nav a.join:hover{color:var(--magenta); text-shadow:var(--glow-mag)}
   .toggle{background:var(--panel); border:1px solid var(--line2); color:var(--ink); width:34px; height:30px;
     font-size:.9rem; cursor:pointer; font-family:"Share Tech Mono",monospace}
   .toggle:hover{border-color:var(--cyan); color:var(--cyan)}
@@ -148,6 +149,7 @@
       <a href="METHODOLOGY.md">Methodology.md</a>
       <a href="CLAUDE.md">Manual.md</a>
       <a href="https://github.com/baeworx/llm-wiki-vault-template" class="keep">GitHub</a>
+      <a href="https://discord.gg/4dWXPudfjm" class="keep join">Join ⤤</a>
     </nav>
     <button class="toggle" id="tg" title="Toggle theme" aria-label="Toggle light/dark">☾</button>
   </div>
@@ -374,6 +376,7 @@ cd llm-wiki-vault-template
         <tr><td>2026-06-18</td><td>1.x</td><td>Original LLM Wiki schema, four areas, model routing, solution/fragment page types.</td></tr>
       </tbody>
     </table>
+    <div class="sig">$ join the crew → <a href="https://discord.gg/4dWXPudfjm">discord.gg/4dWXPudfjm</a></div>
     <div class="sig"><span class="bx">BAEWOR<span class="x">X</span>S</span> // built by Bae for the crew · Feed it › Cite it › Compound it</div>
   </div>
 </footer>
