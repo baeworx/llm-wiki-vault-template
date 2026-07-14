@@ -1,4 +1,6 @@
-# LLM Wiki — Cohort Vault
+# BAEWORXS // LLM Wiki — Cohort Vault
+
+> *A BAEWORXS build by **Bae** — forked for the crew. Feed it › Cite it › Compound it.*
 
 A starter kit for an **LLM-maintained knowledge base**. You curate sources and ask
 questions; your LLM (Claude Code, or any agent that reads this repo) reads the sources,
