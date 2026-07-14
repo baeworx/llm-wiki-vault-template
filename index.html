@@ -1,280 +1,314 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BAEWORXS // LLM Wiki — Cohort Vault</title>
-<meta name="description" content="A cyberpunk starter kit for an LLM-maintained knowledge base. Sources in, cited knowledge out.">
+<title>BAEWORXS Vault — LLM Wiki Cohort Guide</title>
+<meta name="description" content="A terminal-styled guide to the BAEWORXS LLM-maintained knowledge base. Sources in, cited knowledge out.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Monoton&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#081029; --bg2:#0b1738; --panel:#0f1c44; --panel2:#0c1838;
-    --ink:#e8effc; --muted:#93a7d6;
-    --yellow:#ffe11a; --yellow2:#fff06b; --red:#ff2e4d; --red2:#ff6178;
-    --blue:#3f7bff; --blue-soft:#7aa2ff;
-    --line:#20356e; --line2:#2c4a94;
-    --glow-yel:0 0 6px rgba(255,225,26,.6),0 0 26px rgba(255,225,26,.38);
-    --glow-red:0 0 6px rgba(255,46,77,.75),0 0 24px rgba(255,46,77,.42);
-    --glow-blue:0 0 8px rgba(63,123,255,.5),0 0 30px rgba(63,123,255,.3);
+    --bg:#06070d; --panel:#0c0f1c; --panel2:#0e1120; --code:#04050b;
+    --ink:#d6e4f0; --muted:#7d8bb0;
+    --cyan:#00e5ff; --magenta:#ff2ecd; --violet:#a855f7; --amber:#ffd166; --lime:#8dff5a;
+    --line:#1b2440; --line2:#26315c;
+    --glow-cyan:0 0 6px rgba(0,229,255,.6),0 0 22px rgba(0,229,255,.28);
+    --glow-mag:0 0 6px rgba(255,46,205,.6),0 0 22px rgba(255,46,205,.3);
+  }
+  :root[data-theme="light"]{
+    --bg:#eef1f8; --panel:#ffffff; --panel2:#f4f6fc; --code:#0c1024;
+    --ink:#141a2e; --muted:#5a6588;
+    --cyan:#0698b5; --magenta:#c81a95; --violet:#7c3aed; --amber:#b8860b; --lime:#3f9142;
+    --line:#d3dbec; --line2:#c0cae4;
+    --glow-cyan:0 0 0 rgba(0,0,0,0); --glow-mag:0 0 0 rgba(0,0,0,0);
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{
-    margin:0; color:var(--ink);
-    background:
-      radial-gradient(ellipse 80% 50% at 50% -8%,rgba(63,123,255,.30),transparent 62%),
-      radial-gradient(ellipse 60% 40% at 92% 108%,rgba(255,46,77,.14),transparent 60%),
-      linear-gradient(180deg,#0a1636 0%,#081029 45%,#060c1e 100%);
-    background-attachment:fixed;
-    font:16px/1.65 "Rajdhani",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    -webkit-font-smoothing:antialiased; position:relative; overflow-x:hidden;
-  }
-  /* animated neon grid */
-  body::before{
-    content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
-    background:
-      linear-gradient(rgba(63,123,255,.07) 1px,transparent 1px) 0 0/46px 46px,
-      linear-gradient(90deg,rgba(255,225,26,.04) 1px,transparent 1px) 0 0/46px 46px;
-    -webkit-mask-image:radial-gradient(ellipse 100% 80% at 50% 0%,#000 40%,transparent 100%);
-            mask-image:radial-gradient(ellipse 100% 80% at 50% 0%,#000 40%,transparent 100%);
-    animation:drift 20s linear infinite;
-  }
-  @keyframes drift{from{background-position:0 0,0 0}to{background-position:0 46px,46px 0}}
-  /* scanlines */
-  body::after{
-    content:""; position:fixed; inset:0; z-index:2; pointer-events:none; opacity:.4;
-    background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.16) 2px 4px);
-    mix-blend-mode:multiply;
-  }
-  .wrap{max-width:960px; margin:0 auto; padding:0 22px; position:relative; z-index:3}
+  body{margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.7 "Rajdhani",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; -webkit-font-smoothing:antialiased}
+  a{color:var(--cyan); text-decoration:none}
+  a:hover{text-decoration:underline}
   code,.mono{font-family:"Share Tech Mono",ui-monospace,Menlo,Consolas,monospace}
-  a{color:var(--red2); text-decoration:none}
-  a:hover{text-decoration:none; color:var(--yellow); text-shadow:var(--glow-yel)}
 
-  /* top brand bar */
-  .topbar{border-bottom:1px solid var(--line); background:linear-gradient(180deg,rgba(63,123,255,.12),transparent); position:relative; z-index:3}
-  .topbar .wrap{display:flex; align-items:center; justify-content:space-between; min-height:60px; gap:12px; flex-wrap:wrap}
-  .brand{font-family:"Monoton",cursive; font-weight:400; letter-spacing:.12em; font-size:1.5rem; line-height:1;
-    color:var(--yellow); text-shadow:var(--glow-yel); padding:6px 0}
-  .brand .x{color:var(--red); text-shadow:var(--glow-red)}
-  .brand::before{content:"▍"; font-family:"Rajdhani",sans-serif; color:var(--red); margin-right:8px; animation:blink 1.1s steps(1) infinite; text-shadow:var(--glow-red)}
+  /* ── header nav ── */
+  .nav{position:sticky; top:0; z-index:20; background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:blur(8px); border-bottom:1px solid var(--line)}
+  .nav .row{max-width:1180px; margin:0 auto; padding:0 20px; height:54px; display:flex; align-items:center; gap:18px}
+  .logo{font-family:"Orbitron",sans-serif; font-weight:900; letter-spacing:.22em; font-size:.95rem; color:var(--ink)}
+  .logo .x{color:var(--magenta); text-shadow:var(--glow-mag)}
+  .logo::before{content:"▍"; color:var(--cyan); margin-right:6px; animation:blink 1.1s steps(1) infinite}
   @keyframes blink{50%{opacity:0}}
-  .topbar .status{font-family:"Share Tech Mono",monospace; font-size:.72rem; letter-spacing:.14em; color:var(--muted); text-transform:uppercase}
-  .topbar .status .dot{display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--red);
-    box-shadow:var(--glow-red); margin-right:7px; vertical-align:middle; animation:pulse 1.6s ease-in-out infinite}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .nav nav{display:flex; gap:16px; margin-left:auto; font-family:"Share Tech Mono",monospace; font-size:.8rem; letter-spacing:.06em; text-transform:uppercase}
+  .nav nav a{color:var(--muted)} .nav nav a:hover{color:var(--cyan); text-decoration:none}
+  .toggle{background:var(--panel); border:1px solid var(--line2); color:var(--ink); width:34px; height:30px;
+    font-size:.9rem; cursor:pointer; font-family:"Share Tech Mono",monospace}
+  .toggle:hover{border-color:var(--cyan); color:var(--cyan)}
+
+  /* breadcrumb terminal line */
+  .crumb{border-bottom:1px solid var(--line); background:var(--panel2)}
+  .crumb .row{max-width:1180px; margin:0 auto; padding:8px 20px; font-family:"Share Tech Mono",monospace;
+    font-size:.78rem; color:var(--muted); overflow-x:auto; white-space:nowrap}
+  .crumb .p{color:var(--lime)} .crumb .c{color:var(--cyan)}
+
+  /* ── layout ── */
+  .shell{max-width:1180px; margin:0 auto; padding:0 20px; display:grid; grid-template-columns:236px 1fr; gap:34px; align-items:start}
+  /* TOC */
+  aside.toc{position:sticky; top:70px; align-self:start; border:1px solid var(--line); background:var(--panel);
+    padding:14px; margin-top:34px; max-height:calc(100vh - 96px); overflow:auto}
+  aside.toc .hd{font-family:"Share Tech Mono",monospace; font-size:.72rem; letter-spacing:.12em; color:var(--magenta); margin-bottom:10px}
+  aside.toc input{width:100%; background:var(--code); border:1px solid var(--line2); color:var(--ink);
+    font-family:"Share Tech Mono",monospace; font-size:.78rem; padding:6px 8px; margin-bottom:10px}
+  aside.toc input:focus{outline:none; border-color:var(--cyan); box-shadow:var(--glow-cyan)}
+  aside.toc ol{list-style:none; margin:0; padding:0; counter-reset:t}
+  aside.toc li a{display:block; padding:5px 8px; color:var(--muted); font-size:.9rem; border-left:2px solid transparent}
+  aside.toc li a::before{counter-increment:t; content:"0" counter(t) "  "; font-family:"Share Tech Mono",monospace; color:var(--line2); font-size:.8rem}
+  aside.toc li a:hover,aside.toc li a.on{color:var(--cyan); border-left-color:var(--cyan); text-decoration:none; background:rgba(0,229,255,.05)}
+
+  main{min-width:0; padding:34px 0 60px}
 
   /* hero */
-  header.hero{padding:76px 0 56px; border-bottom:1px solid var(--line); position:relative; z-index:3}
-  .eyebrow{font-family:"Share Tech Mono",monospace; font-size:12.5px; letter-spacing:.28em; text-transform:uppercase;
-    color:var(--red2); margin-bottom:22px; text-shadow:var(--glow-red)}
-  h1{font-family:"Audiowide",sans-serif; font-weight:400; font-size:clamp(1.9rem,5.2vw,3.25rem); line-height:1.14;
-    margin:0 0 22px; letter-spacing:.005em; color:var(--yellow); position:relative;
-    text-shadow:0 0 14px rgba(255,225,26,.5),0 0 40px rgba(255,225,26,.2);}
-  /* glitch */
-  .glitch{position:relative; display:inline-block}
-  .glitch::before,.glitch::after{content:attr(data-text); position:absolute; left:0; top:0; width:100%; overflow:hidden}
-  .glitch::before{color:var(--red); z-index:-1; animation:gl1 2.6s infinite linear alternate-reverse}
-  .glitch::after{color:var(--blue-soft); z-index:-2; animation:gl2 3.4s infinite linear alternate-reverse}
-  @keyframes gl1{0%{clip-path:inset(0 0 82% 0);transform:translate(-3px,-1px)}20%{clip-path:inset(40% 0 40% 0);transform:translate(3px,1px)}40%{clip-path:inset(78% 0 4% 0);transform:translate(-2px,0)}60%,100%{clip-path:inset(0 0 100% 0);transform:translate(0,0)}}
-  @keyframes gl2{0%{clip-path:inset(70% 0 12% 0);transform:translate(2px,1px)}25%{clip-path:inset(20% 0 62% 0);transform:translate(-2px,-1px)}50%{clip-path:inset(48% 0 30% 0);transform:translate(1px,0)}75%,100%{clip-path:inset(0 0 100% 0);transform:translate(0,0)}}
-  .lede{font-size:1.16rem; color:var(--muted); max-width:660px; margin:0}
-  .lede b{color:var(--yellow2); font-weight:600}
+  .ascii{margin:0 0 6px; padding:14px 0; overflow-x:auto; color:var(--cyan);
+    font-family:"Share Tech Mono",monospace; font-size:.62rem; line-height:1.05; text-shadow:var(--glow-cyan); white-space:pre}
+  h1{font-family:"Orbitron",sans-serif; font-weight:900; font-size:clamp(1.5rem,3.6vw,2.15rem); letter-spacing:-.01em;
+    margin:6px 0 12px; color:#fff; line-height:1.12}
+  :root[data-theme="light"] h1{color:var(--ink)}
+  .meta{font-family:"Share Tech Mono",monospace; font-size:.76rem; letter-spacing:.06em; color:var(--muted); margin-bottom:20px}
+  .meta b{color:var(--amber); font-weight:400}
+  blockquote.exec{margin:0 0 26px; padding:16px 20px; border:1px solid var(--line2); border-left:3px solid var(--magenta);
+    background:var(--panel); color:var(--ink); font-size:1.02rem}
 
-  .cta{margin-top:34px; display:flex; gap:14px; flex-wrap:wrap}
-  .btn{display:inline-block; padding:12px 22px; font-family:"Share Tech Mono",monospace; font-size:.86rem;
-    letter-spacing:.12em; text-transform:uppercase; border:1px solid var(--line2); color:var(--ink);
-    background:rgba(15,28,68,.7); clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
-    transition:.15s}
-  .btn:hover{text-decoration:none}
-  .btn.primary{border-color:var(--red); color:#fff; box-shadow:var(--glow-red)}
-  .btn.primary:hover{background:var(--red); color:#0a1226; text-shadow:none}
-  .btn.ghost:hover{border-color:var(--yellow); color:var(--yellow); box-shadow:var(--glow-yel); text-shadow:none}
+  /* key takeaways */
+  .kt{border:1px solid var(--line2); background:linear-gradient(180deg,var(--panel),var(--panel2)); padding:18px 22px; margin:0 0 34px;
+    clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px))}
+  .kt h4{font-family:"Orbitron",sans-serif; font-weight:700; font-size:.82rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--amber); margin:0 0 10px}
+  .kt ul{margin:0; padding-left:18px} .kt li{margin:5px 0}
 
-  .flow{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:40px}
-  .flow .pill{font-family:"Share Tech Mono",monospace; font-size:.8rem; letter-spacing:.08em;
-    background:rgba(63,123,255,.1); color:var(--yellow); padding:6px 14px; border:1px solid rgba(255,46,77,.45);
-    box-shadow:inset 0 0 12px rgba(63,123,255,.15); white-space:nowrap}
-  .flow .arw{color:var(--red); font-family:monospace; font-weight:700}
+  section.part{padding-top:14px; margin-top:8px}
+  .kick{font-family:"Share Tech Mono",monospace; font-size:.74rem; letter-spacing:.2em; text-transform:uppercase; color:var(--violet); margin:0 0 6px}
+  .kick .n{color:var(--cyan)}
+  h2{font-family:"Orbitron",sans-serif; font-weight:700; font-size:1.28rem; margin:0 0 12px; color:#fff; letter-spacing:.005em}
+  :root[data-theme="light"] h2{color:var(--ink)}
+  h3{font-family:"Rajdhani",sans-serif; font-weight:700; font-size:1.05rem; color:var(--cyan); margin:20px 0 8px}
+  p{margin:0 0 12px} .sub{color:var(--muted)}
 
-  section{padding:58px 0; border-bottom:1px solid var(--line); position:relative; z-index:3}
-  .kick{font-family:"Share Tech Mono",monospace; font-size:.74rem; letter-spacing:.24em; text-transform:uppercase;
-    color:var(--red2); margin:0 0 10px}
-  .kick .n{color:var(--yellow); text-shadow:var(--glow-yel)}
-  h2{font-family:"Audiowide",sans-serif; font-weight:400; font-size:1.45rem; letter-spacing:.01em; margin:0 0 8px;
-    color:var(--yellow); text-shadow:0 0 14px rgba(255,225,26,.4)}
-  .sub{color:var(--muted); margin:0 0 32px; max-width:660px}
+  table{width:100%; border-collapse:collapse; margin:14px 0 6px; font-size:.93rem; display:block; overflow-x:auto}
+  th,td{border:1px solid var(--line2); padding:9px 12px; text-align:left; vertical-align:top}
+  th{background:var(--panel2); font-family:"Share Tech Mono",monospace; font-size:.74rem; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--cyan)}
+  td code{color:var(--lime); background:var(--code); border:1px solid var(--line); padding:1px 6px}
+  tbody tr:nth-child(even) td,tr:nth-child(even) td{background:rgba(127,139,176,.04)}
 
-  .layers{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
-  .card{background:linear-gradient(180deg,var(--panel),var(--panel2)); border:1px solid var(--line2); padding:22px;
-    position:relative; clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
-    transition:.18s}
-  .card:hover{border-color:var(--red); box-shadow:var(--glow-red); transform:translateY(-3px)}
-  .card::before{content:""; position:absolute; top:10px; right:10px; width:8px; height:8px;
-    border-top:2px solid var(--red); border-right:2px solid var(--red)}
-  .card .tag{font-family:"Share Tech Mono",monospace; font-size:12px; letter-spacing:.06em; color:var(--yellow)}
-  .card h3{font-family:"Audiowide",sans-serif; font-weight:400; margin:10px 0 8px; font-size:1rem; color:#fff}
-  .card p{margin:0; color:var(--muted); font-size:.94rem}
+  ol.steps{counter-reset:s; list-style:none; padding:0; margin:8px 0}
+  ol.steps li{position:relative; padding:12px 16px 12px 52px; border:1px solid var(--line2); border-left:2px solid var(--cyan); margin-bottom:10px; background:linear-gradient(90deg,rgba(0,229,255,.04),transparent)}
+  ol.steps li::before{counter-increment:s; content:"0" counter(s); position:absolute; left:14px; top:11px; font-family:"Share Tech Mono",monospace; color:var(--cyan); text-shadow:var(--glow-cyan)}
+  ol.steps b{color:var(--ink)}
+  kbd{background:var(--code); border:1px solid var(--line2); color:var(--lime); padding:1px 6px; font-family:"Share Tech Mono",monospace; font-size:.85em}
 
-  ol.steps{counter-reset:s; list-style:none; padding:0; margin:0; display:grid; gap:14px}
-  ol.steps li{position:relative; padding:16px 18px 16px 62px;
-    background:linear-gradient(90deg,rgba(63,123,255,.08),transparent); border:1px solid var(--line2);
-    border-left:2px solid var(--red)}
-  ol.steps li::before{counter-increment:s; content:"0" counter(s); position:absolute; left:14px; top:14px;
-    font-family:"Share Tech Mono",monospace; color:var(--yellow); font-size:1.05rem; text-shadow:var(--glow-yel)}
-  ol.steps li b{display:block; margin-bottom:2px; color:var(--ink); font-weight:700}
-  ol.steps li span{color:var(--muted); font-size:.94rem}
-  kbd{background:#050c1f; border:1px solid var(--line2); color:var(--yellow); padding:1px 7px;
-    font-family:"Share Tech Mono",monospace; font-size:.85em}
-
-  .feat{display:grid; grid-template-columns:1fr 1fr; gap:14px}
-  .feat .item{background:var(--panel); border:1px solid var(--line2); border-left:3px solid var(--yellow); padding:16px 18px; transition:.15s}
-  .feat .item:hover{box-shadow:var(--glow-red); border-left-color:var(--red)}
-  .feat .item h4{font-family:"Audiowide",sans-serif; font-weight:400; margin:0 0 6px; font-size:.9rem; color:var(--yellow2)}
-  .feat .item p{margin:0; color:var(--muted); font-size:.92rem}
-
-  /* terminal window */
-  .term{background:#050b1c; border:1px solid var(--line2); box-shadow:0 0 34px rgba(63,123,255,.18)}
-  .term .bar{display:flex; align-items:center; gap:8px; padding:10px 14px; border-bottom:1px solid var(--line);
-    background:linear-gradient(90deg,rgba(255,46,77,.12),rgba(63,123,255,.1))}
-  .term .bar i{width:11px; height:11px; border-radius:50%; display:inline-block}
+  .term{background:var(--code); border:1px solid var(--line2); margin:14px 0}
+  .term .bar{display:flex; align-items:center; gap:7px; padding:9px 13px; border-bottom:1px solid var(--line); background:linear-gradient(90deg,rgba(255,46,205,.08),rgba(0,229,255,.06))}
+  .term .bar i{width:10px; height:10px; border-radius:50%}
   .term .bar .r{background:#ff5f57}.term .bar .y{background:#febc2e}.term .bar .g{background:#28c840}
-  .term .bar span{margin-left:8px; font-family:"Share Tech Mono",monospace; font-size:.74rem; color:var(--muted); letter-spacing:.1em}
-  .term pre{margin:0; padding:20px 22px; overflow-x:auto; font-family:"Share Tech Mono",monospace;
-    font-size:.85rem; line-height:1.75; color:var(--ink)}
-  .term .c{color:var(--muted)}
-  .term a{color:var(--yellow)}
-  .term a:hover{text-shadow:var(--glow-yel)}
+  .term .bar span{margin-left:6px; font-family:"Share Tech Mono",monospace; font-size:.72rem; color:var(--muted); letter-spacing:.08em}
+  .term pre{margin:0; padding:16px 18px; overflow-x:auto; font-family:"Share Tech Mono",monospace; font-size:.82rem; line-height:1.7; color:var(--ink)}
+  .term .c{color:var(--muted)} .term a{color:var(--cyan)}
 
-  .ops{display:grid; grid-template-columns:repeat(2,1fr); gap:14px}
-  .op{background:var(--panel); border:1px solid var(--line2); padding:18px 20px; position:relative; transition:.15s}
-  .op:hover{border-color:var(--yellow); box-shadow:var(--glow-yel)}
-  .op h4{font-family:"Audiowide",sans-serif; font-weight:400; margin:0 0 6px; font-size:.95rem; color:var(--yellow)}
-  .op h4::before{content:"› "; color:var(--red)}
-  .op p{margin:0 0 8px; color:var(--muted); font-size:.92rem}
-  .op code{background:#050c1f; border:1px solid var(--line2); color:var(--yellow); padding:3px 8px;
-    font-size:.82rem; display:inline-block; font-family:"Share Tech Mono",monospace}
+  .rule{display:flex; align-items:center; gap:14px; margin:34px 0 6px; color:var(--line2)}
+  .rule::before,.rule::after{content:""; height:1px; background:var(--line); flex:1}
+  .rule span{font-family:"Share Tech Mono",monospace; font-size:.72rem; color:var(--magenta); letter-spacing:.2em}
+  .top{font-family:"Share Tech Mono",monospace; font-size:.72rem; color:var(--muted); letter-spacing:.1em; float:right; margin-top:8px}
+  .top:hover{color:var(--cyan); text-decoration:none}
 
-  footer{padding:40px 0 72px; color:var(--muted); font-size:.85rem; position:relative; z-index:3}
-  footer .wrap{display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; align-items:center;
-    font-family:"Share Tech Mono",monospace; letter-spacing:.08em}
-  footer .bx{color:var(--yellow); font-family:"Monoton",cursive; letter-spacing:.1em; font-size:1.05rem; text-shadow:var(--glow-yel)}
-  footer a{color:var(--red2)}
+  footer{border-top:1px solid var(--line); margin-top:20px}
+  footer .row{max-width:1180px; margin:0 auto; padding:26px 20px 60px}
+  footer h4{font-family:"Share Tech Mono",monospace; font-size:.74rem; letter-spacing:.14em; text-transform:uppercase; color:var(--violet); margin:0 0 10px}
+  footer .sig{margin-top:20px; font-family:"Share Tech Mono",monospace; font-size:.8rem; color:var(--muted); letter-spacing:.06em}
+  footer .sig .bx{font-family:"Orbitron",sans-serif; font-weight:900; letter-spacing:.16em; color:var(--ink)}
+  footer .sig .bx .x{color:var(--magenta)}
 
-  .motto{font-family:"Share Tech Mono",monospace; font-size:.82rem; letter-spacing:.22em; text-transform:uppercase;
-    color:var(--red2); margin:0 0 22px; text-shadow:var(--glow-red)}
-  .motto b{color:var(--yellow); font-weight:400}
-
-  @media (max-width:720px){ .layers,.feat,.ops{grid-template-columns:1fr} }
-  @media (prefers-reduced-motion:reduce){
-    body::before{animation:none} .brand::before,.topbar .status .dot{animation:none}
-    .glitch::before,.glitch::after{display:none}
+  @media (max-width:860px){
+    .shell{grid-template-columns:1fr}
+    aside.toc{position:static; max-height:none; margin-top:22px; order:2}
+    main{padding-top:22px}
+    .nav nav a:not(.keep){display:none}
   }
+  @media (prefers-reduced-motion:reduce){ .logo::before{animation:none} }
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="wrap">
-    <div class="brand">BAEWOR<span class="x">X</span>S</div>
-    <div class="status"><span class="dot"></span>BAE ONLINE // BAEWORXS VAULT v2.0</div>
+<div class="nav">
+  <div class="row">
+    <span class="logo">BAEWOR<span class="x">X</span>S</span>
+    <nav>
+      <a href="#top" class="keep">Overview</a>
+      <a href="#p04">Method</a>
+      <a href="METHODOLOGY.md">Methodology.md</a>
+      <a href="CLAUDE.md">Manual.md</a>
+      <a href="https://github.com/baeworx/llm-wiki-vault-template" class="keep">GitHub</a>
+    </nav>
+    <button class="toggle" id="tg" title="Toggle theme" aria-label="Toggle light/dark">☾</button>
   </div>
 </div>
 
-<header class="hero">
-  <div class="wrap">
-    <div class="eyebrow">// BAEWORXS · LLM-MAINTAINED KNOWLEDGE BASE</div>
-    <h1><span class="glitch" data-text="Sources in.">Sources in.</span><br><span class="glitch" data-text="Cited knowledge out.">Cited knowledge out.</span></h1>
-    <p class="motto">Feed it <b>›</b> Cite it <b>›</b> Compound it</p>
-    <p class="lede">The knowledge base <b>Bae</b> built — and now it's the crew's. Your AI agent reads
-    sources, extracts knowledge, and keeps an interlinked, <b>trustworthy</b> set of notes that
-    <b>compounds</b> over time instead of being re-derived on every question.</p>
-    <div class="cta">
-      <a class="btn primary" href="README.md">// Read the README</a>
-      <a class="btn ghost" href="METHODOLOGY.md">// Methodology</a>
-      <a class="btn ghost" href="CLAUDE.md">// Operating manual</a>
-    </div>
-    <div class="flow">
-      <span class="pill">FRAME</span><span class="arw">»</span>
-      <span class="pill">DISCOVER</span><span class="arw">»</span>
-      <span class="pill">TRIANGULATE</span><span class="arw">»</span>
-      <span class="pill">SYNTHESIZE</span><span class="arw">»</span>
-      <span class="pill">FILE BACK</span><span class="arw">»</span>
-      <span class="pill">REVIEW</span>
-    </div>
-  </div>
-</header>
+<div class="crumb">
+  <div class="row"><span class="p">baeworxs@vault</span>:<span class="c">~/llm-wiki</span>$ cat guide.md &nbsp;<span class="c">#</span> LLM-maintained knowledge base · v2.0</div>
+</div>
 
-<section>
-  <div class="wrap">
-    <p class="kick"><span class="n">01</span> // ARCHITECTURE</p>
-    <h2>The three layers</h2>
-    <p class="sub">Sources go in, knowledge comes out, and a set of rules keeps it consistent.
-    That separation is what lets the wiki stay trustworthy as it grows.</p>
-    <div class="layers">
-      <div class="card">
-        <div class="tag">raw/</div>
-        <h3>Sources</h3>
-        <p>Immutable source of truth — articles, papers, transcripts, data. The agent reads
-        these and never edits them.</p>
-      </div>
-      <div class="card">
-        <div class="tag">wiki/</div>
-        <h3>Knowledge</h3>
-        <p>LLM-generated, interlinked markdown across four areas. The agent owns this layer
-        entirely: pages, cross-links, consistency.</p>
-      </div>
-      <div class="card">
-        <div class="tag">CLAUDE.md</div>
-        <h3>The rules</h3>
-        <p>How the wiki is structured and maintained. Read every session, co-evolved as your
-        conventions improve.</p>
-      </div>
-    </div>
-  </div>
-</section>
+<div class="shell">
 
-<section>
-  <div class="wrap">
-    <p class="kick"><span class="n">02</span> // BOOT SEQUENCE</p>
-    <h2>Quick start</h2>
-    <p class="sub">Copy the folder, point your agent at it, and start feeding it sources.</p>
-    <ol class="steps">
-      <li><b>Copy this vault</b><span>Grab the whole folder, rename it, and optionally <kbd>git init</kbd> so everyone forks their own.</span></li>
-      <li><b>Open it in Claude Code</b><span>The agent reads <code>CLAUDE.md</code> at the start of every session — that's the contract.</span></li>
-      <li><b>Drop a source into <code>raw/</code></b><span>An article, a paper, a transcript, notes, an image.</span></li>
-      <li><b>Ask it to ingest</b><span>It summarizes the source, rates its credibility, and files cited, confidence-tagged claims into <code>wiki/</code>.</span></li>
-      <li><b>Ask questions</b><span>Good answers get filed back as new pages — your explorations compound instead of evaporating.</span></li>
+  <aside class="toc">
+    <div class="hd">$ ls ./sections/</div>
+    <input id="tocq" type="text" placeholder="filter…" aria-label="Filter sections">
+    <ol id="toclist">
+      <li><a href="#p01">Overview</a></li>
+      <li><a href="#p02">Architecture</a></li>
+      <li><a href="#p03">Quick Start</a></li>
+      <li><a href="#p04">Research Method</a></li>
+      <li><a href="#p05">What's New</a></li>
+      <li><a href="#p06">File Tree</a></li>
+      <li><a href="#p07">Operations</a></li>
+      <li><a href="#p08">Get Started</a></li>
     </ol>
-  </div>
-</section>
+  </aside>
 
-<section>
-  <div class="wrap">
-    <p class="kick"><span class="n">03</span> // PATCH NOTES</p>
-    <h2>What's new in this refresh</h2>
-    <p class="sub">Sharper research methods so a whole cohort produces knowledge the same,
-    trustworthy way. Full detail in <a href="METHODOLOGY.md">METHODOLOGY.md</a>.</p>
-    <div class="feat">
-      <div class="item"><h4>A named research loop</h4><p>Frame → Discover → Triangulate → Synthesize → File back → Review. Everyone researches identically.</p></div>
-      <div class="item"><h4>Source credibility ratings</h4><p><code>high / medium / low</code> via a CRAAP checklist, with conflict-of-interest disclosed up front.</p></div>
-      <div class="item"><h4>Confidence tags on claims</h4><p><code>[C:high]</code> / <code>[C:med]</code> / <code>[C:low]</code> — solid facts and hypotheses stay visibly distinct.</p></div>
-      <div class="item"><h4>Triangulation rule</h4><p>Load-bearing claims need ≥2 <em>independent</em> sources before a synthesis leans on them.</p></div>
-      <div class="item"><h4>A live question backlog</h4><p><code>questions.md</code> keeps the vault driving forward between sessions instead of stalling.</p></div>
-      <div class="item"><h4>Freshness discipline</h4><p><code>review-by</code> dates plus a lint pass so time-sensitive claims don't quietly rot.</p></div>
+  <main id="top">
+    <pre class="ascii" aria-hidden="true">██████╗  █████╗ ███████╗██╗    ██╗ ██████╗ ██████╗ ██╗  ██╗███████╗
+██╔══██╗██╔══██╗██╔════╝██║    ██║██╔═══██╗██╔══██╗╚██╗██╔╝██╔════╝
+██████╔╝███████║█████╗  ██║ █╗ ██║██║   ██║██████╔╝ ╚███╔╝ ███████╗
+██╔══██╗██╔══██║██╔══╝  ██║███╗██║██║   ██║██╔══██╗ ██╔██╗ ╚════██║
+██████╔╝██║  ██║███████╗╚███╔███╔╝╚██████╔╝██║  ██║██╔╝ ██╗███████║
+╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝</pre>
+
+    <h1>BAEWORXS Vault — LLM Wiki Cohort Guide</h1>
+    <div class="meta">~5 min read · updated <b>2026-07-13</b> · version <b>2.0</b> · license <b>MIT</b> · built by <b>Bae</b></div>
+
+    <blockquote class="exec">A wiki your AI agent maintains for you — reading sources, extracting knowledge, and
+    keeping an interlinked, trustworthy set of notes that <em>compounds</em> over time instead of being
+    re-derived on every question. This guide is the operating reference for the crew.</blockquote>
+
+    <div class="kt">
+      <h4>⌁ Key Takeaways</h4>
+      <ul>
+        <li>Three layers: immutable <code>raw/</code> sources → LLM-owned <code>wiki/</code> knowledge → the <code>CLAUDE.md</code> ruleset.</li>
+        <li>Every claim is <b>cited</b> and <b>confidence-tagged</b>; load-bearing claims need ≥2 independent sources.</li>
+        <li>One repeatable research loop: Frame → Discover → Triangulate → Synthesize → File back → Review.</li>
+        <li>Copy the folder, point your agent at it, feed it sources. Knowledge compounds instead of evaporating.</li>
+      </ul>
     </div>
-  </div>
-</section>
 
-<section>
-  <div class="wrap">
-    <p class="kick"><span class="n">04</span> // FILE TREE</p>
-    <h2>What's in the box</h2>
-    <p class="sub">A clean, empty vault with the structure, the manuals, and one seed page per area.</p>
-    <div class="term">
-      <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>baeworxs@vault: ~/llm-wiki $ tree</span></div>
+    <section class="part" id="p01">
+      <p class="kick"><span class="n">01</span> // OVERVIEW</p>
+      <h2>What this is</h2>
+      <p class="sub">An <b>LLM-maintained knowledge base</b>. You curate sources and ask questions; your agent
+      reads the sources, extracts knowledge, and maintains an interlinked wiki of markdown files. Sources go in,
+      cited knowledge comes out, and a small ruleset keeps it consistent as it grows.</p>
+      <a class="top" href="#top">↑ TOP</a>
+    </section>
+
+    <div class="rule"><span>§</span></div>
+
+    <section class="part" id="p02">
+      <p class="kick"><span class="n">02</span> // ARCHITECTURE</p>
+      <h2>The three layers</h2>
+      <p class="sub">The separation is what lets the wiki stay trustworthy as it grows.</p>
+      <table>
+        <thead><tr><th>Layer</th><th>Path</th><th>Role</th></tr></thead>
+        <tbody>
+          <tr><td><b>Sources</b></td><td><code>raw/</code></td><td>Immutable source of truth — articles, papers, transcripts, data. The agent reads these and never edits them.</td></tr>
+          <tr><td><b>Knowledge</b></td><td><code>wiki/</code></td><td>LLM-generated, interlinked markdown across four areas (research · personal · book · general). The agent owns this layer entirely.</td></tr>
+          <tr><td><b>Rules</b></td><td><code>CLAUDE.md</code></td><td>How the wiki is structured and maintained. Read every session, co-evolved as conventions improve.</td></tr>
+        </tbody>
+      </table>
+      <a class="top" href="#top">↑ TOP</a>
+    </section>
+
+    <div class="rule"><span>§</span></div>
+
+    <section class="part" id="p03">
+      <p class="kick"><span class="n">03</span> // BOOT SEQUENCE</p>
+      <h2>Quick start</h2>
+      <ol class="steps">
+        <li><b>Copy this vault</b> — grab the whole folder, rename it, optionally <kbd>git init</kbd> so everyone forks their own.</li>
+        <li><b>Open it in Claude Code</b> — the agent reads <code>CLAUDE.md</code> at the start of every session.</li>
+        <li><b>Drop a source into <code>raw/</code></b> — an article, a paper, a transcript, notes, an image.</li>
+        <li><b>Ask it to ingest</b> — it rates the source's credibility and files cited, confidence-tagged claims into <code>wiki/</code>.</li>
+        <li><b>Ask questions</b> — good answers get filed back as new pages, so explorations compound.</li>
+      </ol>
+      <a class="top" href="#top">↑ TOP</a>
+    </section>
+
+    <div class="rule"><span>§</span></div>
+
+    <section class="part" id="p04">
+      <p class="kick"><span class="n">04</span> // METHOD</p>
+      <h2>The research method</h2>
+      <p class="sub">A claim in this wiki should be more trustworthy than the same claim pulled fresh from a
+      search engine — because it's been evaluated, cited, cross-checked, and dated.</p>
+
+      <h3>The loop</h3>
+      <div class="term">
+        <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>baeworxs@vault: ~/llm-wiki $ research --loop</span></div>
+<pre>FRAME  ›  DISCOVER  ›  TRIANGULATE  ›  SYNTHESIZE  ›  FILE BACK  ›  REVIEW
+  │          │             │              │              │            │
+  frame Q    prefer        corroborate    weigh          cite +       set review-by,
+  in         primary       across ≥2      the            cross-link,  lint for
+  questions  sources       independent    evidence       update index staleness</pre>
+      </div>
+
+      <h3>Source credibility — CRAAP</h3>
+      <table>
+        <thead><tr><th>Lens</th><th>Ask</th><th>Red flag</th></tr></thead>
+        <tbody>
+          <tr><td>Currency</td><td>How old? Fast-moving topic?</td><td>Undated; stale on a moving target</td></tr>
+          <tr><td>Relevance</td><td>Does it address the question?</td><td>Tangential, cherry-picked</td></tr>
+          <tr><td>Authority</td><td>Who made it? Standing?</td><td>Anonymous, no track record</td></tr>
+          <tr><td>Accuracy</td><td>Evidenced? Reproducible?</td><td>No sources, "trust me"</td></tr>
+          <tr><td>Purpose</td><td>Why does it exist? Who profits?</td><td>Selling something, affiliate agenda</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Confidence tags</h3>
+      <table>
+        <thead><tr><th>Tag</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><code>[C:high]</code></td><td>Corroborated across independent sources, or direct primary evidence.</td></tr>
+          <tr><td><code>[C:med]</code></td><td>A single credible source; plausible but not cross-checked.</td></tr>
+          <tr><td><code>[C:low]</code></td><td>A single weak/biased source, or an inference. Treat as a hypothesis.</td></tr>
+        </tbody>
+      </table>
+      <p class="sub">Full detail in <a href="METHODOLOGY.md">METHODOLOGY.md</a>.</p>
+      <a class="top" href="#top">↑ TOP</a>
+    </section>
+
+    <div class="rule"><span>§</span></div>
+
+    <section class="part" id="p05">
+      <p class="kick"><span class="n">05</span> // PATCH NOTES</p>
+      <h2>What's new in this refresh</h2>
+      <table>
+        <thead><tr><th>Method</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td>Named research loop</td><td>Frame → Discover → Triangulate → Synthesize → File back → Review — everyone researches identically.</td></tr>
+          <tr><td>Source credibility ratings</td><td><code>high / medium / low</code> via CRAAP, with conflict-of-interest disclosed up front.</td></tr>
+          <tr><td>Confidence tags</td><td><code>[C:high/med/low]</code> — solid facts and hypotheses stay visibly distinct.</td></tr>
+          <tr><td>Triangulation rule</td><td>Load-bearing claims need ≥2 independent sources before a synthesis leans on them.</td></tr>
+          <tr><td>Question backlog</td><td><code>questions.md</code> keeps the vault driving forward between sessions.</td></tr>
+          <tr><td>Freshness discipline</td><td><code>review-by</code> dates + a lint pass so time-sensitive claims don't rot.</td></tr>
+        </tbody>
+      </table>
+      <a class="top" href="#top">↑ TOP</a>
+    </section>
+
+    <div class="rule"><span>§</span></div>
+
+    <section class="part" id="p06">
+      <p class="kick"><span class="n">06</span> // FILE TREE</p>
+      <h2>What's in the box</h2>
+      <div class="term">
+        <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>baeworxs@vault: ~/llm-wiki $ tree</span></div>
 <pre>vault/
 ├─ <a href="CLAUDE.md">CLAUDE.md</a>          <span class="c"># operating manual — read every session</span>
 ├─ <a href="METHODOLOGY.md">METHODOLOGY.md</a>     <span class="c"># the research method behind the conventions</span>
@@ -289,30 +323,86 @@
    ├─ personal/       <span class="c"># goals, journals, self-overview</span>
    ├─ book/           <span class="c"># chapters, characters, themes</span>
    └─ general/        <span class="c"># flexible / mixed knowledge</span></pre>
-    </div>
-  </div>
-</section>
+      </div>
+      <a class="top" href="#top">↑ TOP</a>
+    </section>
 
-<section>
-  <div class="wrap">
-    <p class="kick"><span class="n">05</span> // COMMAND SET</p>
-    <h2>Four operations</h2>
-    <p class="sub">Everything the agent does falls into one of these. Full definitions live in <a href="CLAUDE.md">CLAUDE.md</a>.</p>
-    <div class="ops">
-      <div class="op"><h4>Ingest</h4><p>Add a source.</p><code>"Ingest raw/&lt;file&gt;."</code></div>
-      <div class="op"><h4>Query</h4><p>Ask a question of your sources.</p><code>"What connects X and Y?"</code></div>
-      <div class="op"><h4>Research</h4><p>Go beyond raw/ with the web.</p><code>"Research &lt;topic&gt; and file it back."</code></div>
-      <div class="op"><h4>Lint</h4><p>Health-check the vault.</p><code>"Find stale claims and orphans."</code></div>
-    </div>
-  </div>
-</section>
+    <div class="rule"><span>§</span></div>
+
+    <section class="part" id="p07">
+      <p class="kick"><span class="n">07</span> // COMMAND SET</p>
+      <h2>The four operations</h2>
+      <table>
+        <thead><tr><th>Op</th><th>What it does</th><th>Say</th></tr></thead>
+        <tbody>
+          <tr><td><b>Ingest</b></td><td>Add a source.</td><td><code>"Ingest raw/&lt;file&gt;."</code></td></tr>
+          <tr><td><b>Query</b></td><td>Ask a question of your sources.</td><td><code>"What connects X and Y?"</code></td></tr>
+          <tr><td><b>Research</b></td><td>Go beyond raw/ with the web.</td><td><code>"Research &lt;topic&gt;, file it back."</code></td></tr>
+          <tr><td><b>Lint</b></td><td>Health-check the vault.</td><td><code>"Find stale claims and orphans."</code></td></tr>
+        </tbody>
+      </table>
+      <p class="sub">Full definitions live in <a href="CLAUDE.md">CLAUDE.md</a>.</p>
+      <a class="top" href="#top">↑ TOP</a>
+    </section>
+
+    <div class="rule"><span>§</span></div>
+
+    <section class="part" id="p08">
+      <p class="kick"><span class="n">08</span> // GET STARTED</p>
+      <h2>Clone it and go</h2>
+      <div class="term">
+        <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>baeworxs@vault: ~ $</span></div>
+<pre><span class="c"># fork your own copy, then:</span>
+git clone https://github.com/baeworx/llm-wiki-vault-template.git
+cd llm-wiki-vault-template
+<span class="c"># open in Claude Code, drop a file in raw/, and say "ingest it."</span></pre>
+      </div>
+      <p class="sub">Read the <a href="README.md">README</a> · <a href="METHODOLOGY.md">METHODOLOGY</a> · <a href="CONTRIBUTING.md">CONTRIBUTING</a> · or browse the <a href="https://github.com/baeworx/llm-wiki-vault-template">repo</a>.</p>
+      <a class="top" href="#top">↑ TOP</a>
+    </section>
+
+  </main>
+</div>
 
 <footer>
-  <div class="wrap">
-    <span><span class="bx">BAEWORXS</span> // BUILT BY BAE FOR THE CREW · A COMPOUNDING KNOWLEDGE BASE</span>
-    <span><a href="README.md">GET STARTED »</a></span>
+  <div class="row">
+    <h4>Changelog</h4>
+    <table>
+      <thead><tr><th>Date</th><th>Ver</th><th>Change</th></tr></thead>
+      <tbody>
+        <tr><td>2026-07-13</td><td>2.0</td><td>Vault refresh — research methods (credibility, confidence, triangulation, question backlog) + terminal-docs guide.</td></tr>
+        <tr><td>2026-06-18</td><td>1.x</td><td>Original LLM Wiki schema, four areas, model routing, solution/fragment page types.</td></tr>
+      </tbody>
+    </table>
+    <div class="sig"><span class="bx">BAEWOR<span class="x">X</span>S</span> // built by Bae for the crew · Feed it › Cite it › Compound it</div>
   </div>
 </footer>
 
+<script>
+  // theme toggle (persisted)
+  var root=document.documentElement, tg=document.getElementById('tg');
+  var saved=localStorage.getItem('bx-theme'); if(saved){root.setAttribute('data-theme',saved);}
+  function paint(){var d=root.getAttribute('data-theme')!=='light'; tg.textContent=d?'☾':'☀';}
+  paint();
+  tg.addEventListener('click',function(){
+    var next=root.getAttribute('data-theme')==='light'?'dark':'light';
+    root.setAttribute('data-theme',next); localStorage.setItem('bx-theme',next); paint();
+  });
+  // TOC filter
+  var q=document.getElementById('tocq'), items=[].slice.call(document.querySelectorAll('#toclist li'));
+  q.addEventListener('input',function(){
+    var v=q.value.toLowerCase();
+    items.forEach(function(li){ li.style.display=li.textContent.toLowerCase().indexOf(v)>-1?'':'none'; });
+  });
+  // TOC active-section highlight
+  var links=[].slice.call(document.querySelectorAll('#toclist a')),
+      secs=links.map(function(a){return document.querySelector(a.getAttribute('href'));});
+  function onScroll(){
+    var y=window.scrollY+120, idx=0;
+    secs.forEach(function(s,i){ if(s && s.offsetTop<=y) idx=i; });
+    links.forEach(function(a,i){ a.classList.toggle('on',i===idx); });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+</script>
 </body>
 </html>
